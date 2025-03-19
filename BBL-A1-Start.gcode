@@ -232,32 +232,32 @@ M104 S170 ; prepare to wipe nozzle
 M106 S255 ; turn on fan
 
 ;===== mech mode fast check start =====================
-M1002 gcode_claim_action : 3
+; M1002 gcode_claim_action : 3
 
-G1 X128 Y128 F20000
-G1 Z5 F1200
-M400 P200
-M970.3 Q1 A5 K0 O3
-M974 Q1 S2 P0
+; G1 X128 Y128 F20000
+; G1 Z5 F1200
+; M400 P200
+; M970.3 Q1 A5 K0 O3
+; M974 Q1 S2 P0
 
-M970.2 Q1 K1 W58 Z0.1
-M974 S2
+; M970.2 Q1 K1 W58 Z0.1
+; M974 S2
 
-G1 X128 Y128 F20000
-G1 Z5 F1200
-M400 P200
-M970.3 Q0 A10 K0 O1
-M974 Q0 S2 P0
+; G1 X128 Y128 F20000
+; G1 Z5 F1200
+; M400 P200
+; M970.3 Q0 A10 K0 O1
+; M974 Q0 S2 P0
 
-M970.2 Q0 K1 W78 Z0.1
-M974 S2
+; M970.2 Q0 K1 W78 Z0.1
+; M974 S2
 
-M975 S1
-G1 F30000
-G1 X0 Y5
-G28 X ; re-home XY
+; M975 S1
+; G1 F30000
+; G1 X0 Y5
+; G28 X ; re-home XY
 
-G1 Z4 F1200
+; G1 Z4 F1200
 
 ;===== mech mode fast check end =======================
 
@@ -597,3 +597,4 @@ M211 X0 Y0 Z0 ;turn off soft endstop
 ;G392 S1 ; turn on clog detection
 M1007 S1 ; turn on mass estimation
 G29.4
+
