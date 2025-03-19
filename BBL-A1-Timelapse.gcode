@@ -1,5 +1,5 @@
 ;===================== date: 20240606 =====================
-{if !spiral_mode && print_sequence != "by object"}
+{if false && !spiral_mode && print_sequence != "by object"}
 ; don't support timelapse gcode in spiral_mode and by object sequence for I3 structure printer
 M622.1 S1 ; for prev firware, default turned on
 M1002 judge_flag timelapse_record_flag
