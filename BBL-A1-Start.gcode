@@ -38,8 +38,9 @@ M18
 
 ;=====avoid end stop =================
 G91
-G380 S2 Z40 F1200
-G380 S3 Z-15 F1200
+M17 Z0.3 ; lower the z-motor current
+; G380 S2 Z4 F600
+G380 S3 Z-5 F600 ; avoid hitting top z and noise
 G90
 
 ;===== reset machine status =================
@@ -66,12 +67,12 @@ M1002 gcode_claim_action : 13
 
 G28 X
 G91
-G1 Z5 F1200
+G1 Z-5 F600
 G90
 G0 X128 F30000
 G0 Y254 F3000
 G91
-G1 Z-5 F1200
+G1 Z-5 F600
 
 M109 S25 H140
 
@@ -81,7 +82,7 @@ G1 E10 F1200
 G1 E-0.5 F30
 M17 D
 
-G28 Z P0 T140; home z with low precision,permit 300deg temperature
+G28 Z P0 T140; home z with low precision,permit 140deg temperature
 M104 S{nozzle_temperature_initial_layer[initial_extruder]}
 
 M1002 judge_flag build_plate_detect_flag
@@ -500,7 +501,7 @@ M623
 ;M400
 ;M73 P1.717
 
-G1 X108.000 Y-0.500 F30000
+G1 X80.000 Y-0.500 F30000
 G1 Z0.300 F1200
 M400
 G2814 Z0.32
@@ -530,12 +531,12 @@ M400
     M83
 
     M109 S{nozzle_temperature_initial_layer[initial_extruder]}
-    G0 X128 E8  F{outer_wall_volumetric_speed/(24/20)    * 60}
-    G0 X133 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
-    G0 X138 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
-    G0 X143 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
-    G0 X148 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
-    G0 X153 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+    G0 X100 E8  F{outer_wall_volumetric_speed/(24/20)    * 60}
+    G0 X105 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+    G0 X110 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+    G0 X115 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+    G0 X120 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+    G0 X125 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
     G91
     G1 X1 Z-0.300
     G1 X4
@@ -547,18 +548,18 @@ M900 R
 
 M1002 judge_flag extrude_cali_flag
 M622 J1
-    G90
-    G1 X108.000 Y1.000 F30000
+    ; G90
+    ; G1 X130.000 Y-0.500 F30000
     G91
     G1 Z-0.700 F1200
     G90
     M83
-    G0 X128 E10  F{outer_wall_volumetric_speed/(24/20)    * 60}
-    G0 X133 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
-    G0 X138 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
-    G0 X143 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
-    G0 X148 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
-    G0 X153 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+    G0 X150 E10  F{outer_wall_volumetric_speed/(24/20)    * 60}
+    G0 X155 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+    G0 X160 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+    G0 X165 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
+    G0 X170 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)     * 60}
+    G0 X175 E.3742  F{outer_wall_volumetric_speed/(0.3*0.5)/4     * 60}
     G91
     G1 X1 Z-0.300
     G1 X4
@@ -597,4 +598,3 @@ M211 X0 Y0 Z0 ;turn off soft endstop
 ;G392 S1 ; turn on clog detection
 M1007 S1 ; turn on mass estimation
 G29.4
-
