@@ -1,3 +1,3 @@
 ## BambuLab A1 G-code improvements
 
-Be careful when updating g-code 👀
+Be careful when editing g-code 👀
