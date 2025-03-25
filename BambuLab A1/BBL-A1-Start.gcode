@@ -8,7 +8,7 @@ M9833.2
 ;===== start to heat heatbead&hotend==========
 M1002 gcode_claim_action : 2
 M1002 set_filament_type:{filament_type[initial_no_support_extruder]}
-M104 S140
+M104 S150
 M140 S[bed_temperature_initial_layer_single]
 
 ;=====start printer sound ===================
@@ -39,8 +39,8 @@ M18
 ;=====avoid end stop =================
 G91
 M17 Z0.3 ; lower the z-motor current
-; G380 S2 Z4 F600
-G380 S3 Z-5 F600 ; avoid hitting top z and noise
+G380 S2 Z1 F600
+G380 S3 Z-0.5 F600 ; avoid hitting top z and noise
 G90
 
 ;===== reset machine status =================
@@ -75,12 +75,6 @@ G91
 G1 Z-5 F600
 
 M109 S25 H140
-
-M17 E0.3
-M83
-G1 E10 F1200
-G1 E-0.5 F30
-M17 D
 
 G28 Z P0 T140; home z with low precision,permit 140deg temperature
 M104 S{nozzle_temperature_initial_layer[initial_extruder]}
@@ -123,28 +117,22 @@ M620 S[initial_no_support_extruder]A   ; switch material if AMS exist
     M109 S250 ;set nozzle to common flush temp
     M106 P1 S0
     G92 E0
-    G1 E50 F200
+    G1 E30 F200
     M400
     M1002 set_filament_type:{filament_type[initial_no_support_extruder]}
 M621 S[initial_no_support_extruder]A
 
 M109 S{nozzle_temperature_range_high[initial_no_support_extruder]} H300
 G92 E0
-G1 E50 F200 ; lower extrusion speed to avoid clog
+G1 E30 F200 ; lower extrusion speed to avoid clog
 M400
-M106 P1 S178
+M106 P1 S170
 G92 E0
-G1 E5 F200
+G1 E30 F200
 M104 S{nozzle_temperature_initial_layer[initial_no_support_extruder]}
 G92 E0
 G1 E-0.5 F300
 
-G1 X-28.5 F30000
-G1 X-48.2 F3000
-G1 X-28.5 F30000 ;wipe and shake
-G1 X-48.2 F3000
-G1 X-28.5 F30000 ;wipe and shake
-G1 X-48.2 F3000
 
 ;G392 S0
 
@@ -162,7 +150,7 @@ M975 S1
 G90
 M83
 T1000
-G1 X-48.2 Y0 Z10 F10000
+G1 X-48.2 Z10 F1200
 M400
 M1002 set_filament_type:UNKNOWN
 
@@ -182,56 +170,34 @@ M622 J1
     M109 S{nozzle_temperature[initial_extruder]}
     G1 E10 F{outer_wall_volumetric_speed/2.4*60}
     M983 F{outer_wall_volumetric_speed/2.4} A0.3 H[nozzle_diameter]; cali dynamic extrusion compensation
-
-    M106 P1 S255
-    M400 S5
-    G1 X-28.5 F18000
-    G1 X-48.2 F3000
-    G1 X-28.5 F18000 ;wipe and shake
-    G1 X-48.2 F3000
-    G1 X-28.5 F12000 ;wipe and shake
-    G1 X-48.2 F3000
-    M400
-    M106 P1 S0
-
+	M400
     M1002 judge_last_extrude_cali_success
     M622 J0
-        M983 F{outer_wall_volumetric_speed/2.4} A0.3 H[nozzle_diameter]; cali dynamic extrusion compensation
-        M106 P1 S255
-        M400 S5
-        G1 X-28.5 F18000
-        G1 X-48.2 F3000
-        G1 X-28.5 F18000 ;wipe and shake
-        G1 X-48.2 F3000
-        G1 X-28.5 F12000 ;wipe and shake
+        M983 F{outer_wall_volumetric_speed/2.4} A0.3 H[nozzle_diameter]; cali dynamic extrusion compensation    
         M400
-        M106 P1 S0
     M623
     
     G1 X-48.2 F3000
     M400
     M984 A0.1 E1 S1 F{outer_wall_volumetric_speed/2.4} H[nozzle_diameter]
-    M106 P1 S178
-    M400 S7
-    G1 X-28.5 F18000
-    G1 X-48.2 F3000
-    G1 X-28.5 F18000 ;wipe and shake
-    G1 X-48.2 F3000
-    G1 X-28.5 F12000 ;wipe and shake
-    G1 X-48.2 F3000
     M400
-    M106 P1 S0
 M623 ; end of "draw extrinsic para cali paint"
 
 ;G392 S0
 ;===== auto extrude cali end ========================
-
+;===== Fix Chay Nhua Start ========================
+M106 S150
+M109 S180 ; prepare to wipe nozzle
+M104 S140
+G1 X-38.2 F18000
+G1 X-48.2 F3000
+G1 X-38.2 F18000 ; soft wipe and shake
+G1 X-48.2 F3000
+G1 X-38.2 F12000 ; soft wipe and shake
+G1 X-48.2 F3000
+;===== Fix Chay Nhua End ========================
 ;M400
 ;M73 P1.717
-
-M104 S170 ; prepare to wipe nozzle
-M106 S255 ; turn on fan
-
 ;===== mech mode fast check start =====================
 ; M1002 gcode_claim_action : 3
 
@@ -269,147 +235,11 @@ M106 S255 ; turn on fan
 M1002 gcode_claim_action : 14
 
 M975 S1
-M106 S255 ; turn on fan (G28 has turn off fan)
 M211 S; push soft endstop status
 M211 X0 Y0 Z0 ;turn off Z axis endstop
-
-;===== remove waste by touching start =====
-
-M104 S170 ; set temp down to heatbed acceptable
-
-M83
-G1 E-1 F500
-G90
-M83
-
-M109 S170
-G0 X108 Y-0.5 F30000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X110 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X112 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X114 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X116 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X118 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X120 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X122 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X124 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X126 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X128 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X130 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X132 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X134 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X136 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X138 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X140 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X142 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X144 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X146 F10000
-G380 S3 Z-5 F1200
-G1 Z2 F1200
-G1 X148 F10000
-G380 S3 Z-5 F1200
-
-G1 Z5 F30000
-;===== remove waste by touching end =====
-
-G1 Z10 F1200
-G0 X118 Y261 F30000
-G1 Z5 F1200
-M109 S{nozzle_temperature_initial_layer[initial_extruder]-50}
-
-G28 Z P0 T300; home z with low precision,permit 300deg temperature
-G29.2 S0 ; turn off ABL
-M104 S140 ; prepare to abl
-G0 Z5 F20000
-
-G0 X128 Y261 F20000  ; move to exposed steel surface
-G0 Z-1.01 F1200      ; stop the nozzle
-
-G91
-G2 I1 J0 X2 Y0 F2000.1
-G2 I-0.75 J0 X-1.5
-G2 I1 J0 X2
-G2 I-0.75 J0 X-1.5
-G2 I1 J0 X2
-G2 I-0.75 J0 X-1.5
-G2 I1 J0 X2
-G2 I-0.75 J0 X-1.5
-G2 I1 J0 X2
-G2 I-0.75 J0 X-1.5
-G2 I1 J0 X2
-G2 I-0.75 J0 X-1.5
-G2 I1 J0 X2
-G2 I-0.75 J0 X-1.5
-G2 I1 J0 X2
-G2 I-0.75 J0 X-1.5
-G2 I1 J0 X2
-G2 I-0.75 J0 X-1.5
-G2 I1 J0 X2
-G2 I-0.75 J0 X-1.5
-
-G90
-G1 Z10 F1200
-
 ;===== brush material wipe nozzle =====
-
 G90
-G1 Y250 F30000
-G1 X55
-G1 Z1.300 F1200
-G1 Y262.5 F6000
-G91
-G1 X-35 F30000
-G1 Y-0.5
-G1 X45
-G1 Y-0.5
-G1 X-45
-G1 Y-0.5
-G1 X45
-G1 Y-0.5
-G1 X-45
-G1 Y-0.5
-G1 X45
-G1 Z5.000 F1200
-
-G90
-G1 X30 Y250.000 F30000
+G1 X30 F30000
 G1 Z1.300 F1200
 G1 Y262.5 F6000
 G91
@@ -425,16 +255,13 @@ G1 X45
 G1 Y-0.5
 G1 X-45
 G1 Z10.000 F1200
-
 ;===== brush material wipe nozzle end =====
-
 G90
 ;G0 X128 Y261 F20000  ; move to exposed steel surface
 G1 Y250 F30000
-G1 X138
+G1 X128
 G1 Y261
 G0 Z-1.01 F1200      ; stop the nozzle
-
 G91
 G2 I1 J0 X2 Y0 F2000.1
 G2 I-0.75 J0 X-1.5
@@ -457,27 +284,16 @@ G2 I-0.75 J0 X-1.5
 G2 I1 J0 X2
 G2 I-0.75 J0 X-1.5
 
-M109 S140
-M106 S255 ; turn on fan (G28 has turn off fan)
-
-M211 R; pop softend status
-
 ;===== wipe nozzle end ================================
 
-;M400
-;M73 P1.717
-
 ;===== bed leveling ==================================
+
 M1002 judge_flag g29_before_print_flag
 
 G90
 G1 Z5 F1200
 G1 X0 Y0 F30000
 G29.2 S1 ; turn on ABL
-
-M190 S[bed_temperature_initial_layer_single]; ensure bed temp
-M109 S140
-M106 S0 ; turn off fan , too noisy
 
 M622 J1
     M1002 gcode_claim_action : 1
