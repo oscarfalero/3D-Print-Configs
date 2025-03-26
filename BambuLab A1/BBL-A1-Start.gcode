@@ -67,10 +67,10 @@ M1002 gcode_claim_action : 13
 
 G28 X
 G91
-G1 Z-5 F600
+G1 Z5 F600
 G90
 G0 X128 F30000
-G0 Y254 F3000
+G0 Y250 F3000
 G91
 G1 Z-5 F600
 
@@ -239,6 +239,7 @@ M211 S; push soft endstop status
 M211 X0 Y0 Z0 ;turn off Z axis endstop
 ;===== brush material wipe nozzle =====
 G90
+G1 Y250 F6000
 G1 X30 F30000
 G1 Z1.300 F1200
 G1 Y262.5 F6000
